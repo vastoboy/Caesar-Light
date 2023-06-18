@@ -42,7 +42,7 @@ Browser History Summary\
 
 
 
-Browsing Active Times\
+Browsing Active Times \
 
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/93ba9d95-0fb8-4d72-8033-adf595a42a5d)
 
@@ -50,4 +50,8 @@ Browsing Active Times\
 
 
 
+Examine Tragets's Browsing Data \
+![Picture2](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/a3f58e1a-a19a-45d4-8340-70439f4cd2e4)
+
+![Picture7](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/6c4d0f54-265f-44b8-961f-ecf2ca8706dd)
 
