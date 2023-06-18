@@ -1,6 +1,6 @@
 # Caesar
 
-Simple Python Reverse Shell For Educational Purposes\
+Simple Python Reverse Shell For Educational Purposes
 
 The program can be used to gain an indepth profile of a target by extracting sensitive data and analysing that data 
 Run in Ubuntu\
@@ -54,7 +54,7 @@ Browsing Active Times \
 
 
 
-Examine Tragets's Browsing Data \
+Examine Tragets's Browsing Data 
 ![Picture2](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/a3f58e1a-a19a-45d4-8340-70439f4cd2e4)
 
 ![Picture7](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/6c4d0f54-265f-44b8-961f-ecf2ca8706dd)
