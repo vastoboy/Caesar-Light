@@ -4,6 +4,8 @@ Simple Python Reverse Shell For Educational Purposes\
 Run in Ubuntu\
 Install Elasticsearch and set up an index before running\
 
+Data Used in this example is generated and it is not a real person's data
+
 
 
 
