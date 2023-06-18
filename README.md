@@ -10,29 +10,30 @@ Data Used in this example is generated and it is not a real person's data nor do
 
 
 
-
+Reverse Shell Diagram 
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
 
 
 
-Guide\
+User Guide\
 ![Picture4](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/9621ca17-2f8e-4504-9afb-939138436ab0)
 
 
 
 Clients\
-Display previously connected clients and active connected clients\
+Display previously connected clients and clients with an active connection to the server\
 ![Picture5](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/78420df0-11b1-4671-8dcb-87f66ae29ed4)
 
 
 
 Data Collected\
-The following Data is extracted from the target's machine 
+The following Data is extracted from the target's machine when the client script is executed. 
 ![Picture1](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/99e79651-3c68-4648-ad4f-f35c5ea9ee79)
 
 
 
 Reverse Shell\
+Get a reverse shell and interact with the tartget's machine
 ![Picture6](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/1f4e3bd2-05fd-4fd0-a6d8-7f1d9160c147)
 
 
