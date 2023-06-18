@@ -37,6 +37,16 @@ Display Extracted Data\
 ![Picture2](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/c70617d0-a659-46ac-b31d-86a2c0672fb8)
 
 
+Browser History Summary\
+![Picture5](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/ce2b5867-1d96-4228-a34a-0f62f2ae9735)
+
+
+
+Browsing Active Times\
+
+![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/93ba9d95-0fb8-4d72-8033-adf595a42a5d)
+
+![Picture4](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/eeb3b180-0dc7-4de7-8297-406322aefa00)
 
 
 
