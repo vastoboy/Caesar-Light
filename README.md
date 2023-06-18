@@ -16,7 +16,7 @@ I assume no responsibility for your actions.
 
 
 
-Tools Used:\
+Tools used during development:\
 • Elasticsearch\
 • Python\
 •	VirtualBox\
