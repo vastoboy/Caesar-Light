@@ -1,4 +1,4 @@
-from CaesarClient import CaesarClient
+from caesar_client import CaesarClient
 
 
 cr = CaesarClient("SERVER-IP", 5000)

@@ -178,7 +178,7 @@ class Caesar:
 
 
 
-        def convvert_caesar_text(self, text):
+        def convert_caesar_text(self, text):
             RESET = "\033[0m"
             BOLD = "\033[1m"
             COLOR = "\u001b[36m" 
@@ -521,7 +521,7 @@ class Caesar:
         #shell interface
         def shell_interface(self):
                 while True:
-                    print(self.convvert_caesar_text("Caesar: "), end="")
+                    print(self.convert_caesar_text("Caesar: "), end="")
                     cmd = input()
                     cmd = cmd.rstrip()
 
