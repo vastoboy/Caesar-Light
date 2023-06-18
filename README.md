@@ -1,10 +1,12 @@
 # Caesar
 
 Simple Python Reverse Shell For Educational Purposes\
-Run in Ubuntu\
-Install Elasticsearch and set up an index before running\
 
-Data Used in this example is generated and it is not a real person's data
+The program can be used to gain an indepth profile of a target by extracting sensitive data and analysing that data 
+Run in Ubuntu\
+Install Elasticsearch and set up an index before running server program
+
+Data Used in this example is generated and it is not a real person's data nor does it represent a real individual's brosing activitiy
 
 
 
