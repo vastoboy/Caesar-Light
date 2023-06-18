@@ -6,7 +6,7 @@ The program can be used to gain an indepth profile of a target by extracting sen
 Run in Ubuntu\
 Install Elasticsearch and set up an index before running server program
 
-Data Used in this example is generated and it is not a real person's data nor does it represent a real individual's brosing activitiy
+Data Used in this example is generated and it is not a real person's data nor does it represent a real individual's browsing activitiy
 
 
 
