@@ -1,6 +1,6 @@
 # Caesar
 
-Simple Python Reverse Shell For Educational Purpose\
+Simple Python Reverse Shell For Educational Purposes\
 Run in Ubuntu\
 Install Elasticsearch and set up an index before running\
 
@@ -22,6 +22,10 @@ Data Collected\
 
 Reverse Shell\
 ![Picture6](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/1f4e3bd2-05fd-4fd0-a6d8-7f1d9160c147)
+
+
+Display Extracted Data\
+![Picture2](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/c70617d0-a659-46ac-b31d-86a2c0672fb8)
 
 
 
