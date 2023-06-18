@@ -1,11 +1,11 @@
 # Caesar
 
-Simple Python Reverse Shell For Educational Purposes
+Simple Python Reverse Shell Prototype For Educational Purposes.
 
-The program can be used to gain an indepth profile of a target by extracting sensitive data and analysing that data 
+The program can be used to gain an indepth profile of a target by extracting sensitive data and analysing that data. 
 
 The server script was developed in Ubuntu\
-Install Elasticsearch and set up an index before running server program
+Install Elasticsearch and set up an index before running server program.
 
 Data Used in this example has been generated for this demonstration and it is not a real person's data nor does it represent a real individual's browsing activitiy. 
 
