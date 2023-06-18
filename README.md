@@ -3,14 +3,30 @@
 Simple Python Reverse Shell For Educational Purposes
 
 The program can be used to gain an indepth profile of a target by extracting sensitive data and analysing that data 
-Run in Ubuntu\
+
+The server script was developed in Ubuntu\
 Install Elasticsearch and set up an index before running server program
 
-Data Used in this example is generated and it is not a real person's data nor does it represent a real individual's browsing activitiy
+Data Used in this example has been generated for this demonstration and it is not a real person's data nor does it represent a real individual's browsing activitiy. 
 
-This should be used as a guide for anyone loooking to get into malware development and wants a general overview on how to extract and analyse data. This example does not cover Anti
+This should be used as a guide for anyone loooking to get into malware development and wants a general overview on how to extract and analyse data. This prototype does not cover antivirus evasion techniques.
 
-Dont be stupid and use this on an unauthorised system!!!
+Do not be stupid and use this on an unauthorised system!!! 
+I assume no responsibility for your actions. 
+
+
+
+Tools Used:
+• Elasticsearch
+• Python
+•	VirtualBox 
+•	Ubuntu ISO
+•	Sublime Text Editor
+•	Windows 
+•	PyCharm
+•	DB Browser for SQLite
+•	files.000webhost.com (FTP Server)
+
 
 Reverse Shell Diagram\
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
