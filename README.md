@@ -17,15 +17,15 @@ I assume no responsibility for your actions.
 
 
 Tools Used:
-• Elasticsearch
-• Python
-•	VirtualBox 
-•	Ubuntu ISO
-•	Sublime Text Editor
-•	Windows 
-•	PyCharm
-•	DB Browser for SQLite
-•	files.000webhost.com (FTP Server)
+• Elasticsearch\
+• Python\
+•	VirtualBox\
+•	Ubuntu ISO\
+•	Sublime Text Editor\
+•	Windows\
+•	PyCharm\
+•	DB Browser for SQLite\
+•	files.000webhost.com (FTP Server)\
 
 
 Reverse Shell Diagram\
