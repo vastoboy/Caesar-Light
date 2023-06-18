@@ -11,7 +11,7 @@ Data Used in this example has been generated for this demonstration and it is no
 
 This should be used as a guide for anyone loooking to get into malware development and wants a general overview on how to extract and analyse data. This prototype does not cover antivirus evasion techniques.
 
-User input handling can be improved however, all the features should work just fine if configured properly. 
+User input handling can be improved however, all the features should work just fine if configured correctly. 
 
 Do not be stupid and use this on an unauthorised system!!! 
 I assume no responsibility for your actions. 
