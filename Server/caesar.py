@@ -171,7 +171,7 @@ class Caesar:
                     'rank channels (target ES Client_ID) count': [displays target's most watched youtube channels in descending order]
                     'rank websites (target ES Client_ID) count': [displays target's most visited website in descending order]
                     'web titles (target ES Client_ID) (domain_name)': [display website titles for specified domain name]
-                    'video titles (target ES Client_ID) (domain_name)': [display video titles for specified youtube channel]
+                    'video titles (target ES Client_ID) (channel_name)': [display video titles for specified youtube channel]
                     'user activity (target ES Client_ID)': [ranks most used applications in descending order]
             """
             print(user_guide)
