@@ -2,7 +2,7 @@
 
 Simple Python Reverse Shell Prototype For Educational Purposes.
 
-This reverse shell can be used to gain an in-depth profile of a target by extracting sensitive data and analysing that data. 
+This reverse shell can be used to build an in-depth profile of a target by extracting sensitive data and analysing that data. 
 
 The server script was developed in Ubuntu\
 Install Elasticsearch and set up an index before running server program.
