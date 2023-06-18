@@ -10,7 +10,7 @@ Data Used in this example is generated and it is not a real person's data nor do
 
 This should be used as a guide for anyone loooking to get into malware development and wants a general overview on how to extract and analyse data. This example does not cover Anti
 
-Dont be stupid and used this on unauthorised systems!!!
+Dont be stupid and use this on an unauthorised system!!!
 
 Reverse Shell Diagram\
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
