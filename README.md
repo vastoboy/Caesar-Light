@@ -16,7 +16,7 @@ I assume no responsibility for your actions.
 
 
 
-Tools Used:
+Tools Used:\
 • Elasticsearch\
 • Python\
 •	VirtualBox\
@@ -25,7 +25,7 @@ Tools Used:
 •	Windows\
 •	PyCharm\
 •	DB Browser for SQLite\
-•	files.000webhost.com (FTP Server)\
+•	files.000webhost.com (FTP Server)
 
 
 Reverse Shell Diagram\
