@@ -49,7 +49,8 @@ Display previously connected clients and clients with an active connection to th
 
 Data Collected\
 The following Data is extracted from the target's machine when the client script is executed. 
-![Picture1](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/99e79651-3c68-4648-ad4f-f35c5ea9ee79)
+![Screenshot 2023-06-19 011334](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/448a902f-f501-49bc-b148-00f41396f9e2)
+
 
 
 
