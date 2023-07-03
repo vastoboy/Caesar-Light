@@ -1,6 +1,6 @@
 # Caesar Reverse Shell
 
-Simple Python Reverse Shell Prototype For Educational Purposes Only!!!
+Simple Python TCP Reverse Shell Prototype For Educational Purposes Only!!!
 
 This reverse shell can be used to build an in-depth profile of a target by extracting sensitive data and analysing that data. 
 
