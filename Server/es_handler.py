@@ -98,7 +98,7 @@ class EsHandler:
 
 
 
-        #retrieve client information documents fromelastic search
+        #retrieve client information documents from elastic search
         def retrieve_client_information(self):
             resp = self.es.search(index=self.db_name, size=100, query={"match_all": {}})
             self.tabulate_data(resp)
