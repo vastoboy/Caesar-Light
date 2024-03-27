@@ -1,33 +1,28 @@
-#Created by Xand
+#Created by Vasto Boy
 
 #Disclaimer: This reverse shell should only be used in the lawful, remote administration of authorized systems. Accessing a computer network without authorization or permission is illegal.
 
-
-from caesar import Caesar
 import os
+from caesar import Caesar
 
 
 art = """
-          /$$$$$$
-         /$$__  $$
-        | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$   /$$$$$$
-        | $$       |____  $$ /$$__  $$ /$$_____/ |____  $$ /$$__  $$
-        | $$        /$$$$$$$| $$$$$$$$|  $$$$$$   /$$$$$$$| $$  \__/
-        | $$    $$ /$$__  $$| $$_____/ \____  $$ /$$__  $$| $$
-        |  $$$$$$/|  $$$$$$$|  $$$$$$$ /$$$$$$$/|  $$$$$$$| $$
-         \______/  \_______/ \_______/|_______/  \_______/|__/
+     ██████╗ █████╗ ███████╗███████╗ █████╗ ██████╗     ██╗     ██╗ ██████╗ ██╗  ██╗████████╗
+    ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔══██╗    ██║     ██║██╔════╝ ██║  ██║╚══██╔══╝
+    ██║     ███████║█████╗  ███████╗███████║██████╔╝    ██║     ██║██║  ███╗███████║   ██║   
+    ██║     ██╔══██║██╔══╝  ╚════██║██╔══██║██╔══██╗    ██║     ██║██║   ██║██╔══██║   ██║   
+    ╚██████╗██║  ██║███████╗███████║██║  ██║██║  ██║    ███████╗██║╚██████╔╝██║  ██║   ██║   
+     ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
 """
-
 
 
 print(art)
 
+client_folder_name = "ClientFolder"
+cr = Caesar("192.168.1.206", 5000, "caesar-index", "http://localhost:9200", client_folder_name)
 
-
-cr = Caesar("IP-Address", 5000, "ES-INDEX", "http://localhost:9200")
-
-if not os.path.exists("ClientFolder"):
-    os.mkdir("ClientFolder")
+if not os.path.exists(client_folder_name):
+    os.mkdir(client_folder_name)
 
 cr.show_commands()
 cr.start()

