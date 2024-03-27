@@ -100,7 +100,7 @@ class ClientHandler:
                         file.write(data)
                         data = client_sock_object.recv(1024)
                     file.close()
-                print("[+]Image saved sucessfully!")
+                print("[+]Image saved successfully!")
 
             except Exception as e:
                 print("[-]Unable to receive image!!!")

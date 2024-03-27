@@ -34,7 +34,7 @@ class Caesar:
                 self.sock.bind((self.host, self.port))
                 self.sock.listen(20) #listen for connection
             except socket.error as err:
-                print("[-]Error unable to create socket!!!" + str(err))
+                print(f"[-]Error unable to create socket {str(err)}")
 
 
         # handles incoming connections
@@ -57,7 +57,8 @@ class Caesar:
                         if not os.path.exists(path):
                             os.mkdir(path)
 
-                        print("\n[+]Node " + str(ip) + " has reconnected!!!")
+                        print(f"\n[+]Node {ip} has reconnected!")
+
 
                     # create a new ES document if the client does not exist
                     else:
@@ -69,7 +70,7 @@ class Caesar:
                             os.mkdir(path) # create a folder for new client using their ES client ID
 
                         self.socket_object_dict.update(client_conn_dict)
-                        print("\n[+]Node " + str(ip) + " has connected!!!")
+                        print(f"\n[+]Node {ip} has connected!")
 
                 except Exception as e:
                     print(e)
@@ -144,7 +145,7 @@ class Caesar:
             return f"{BOLD}{COLOR}{text}{RESET}"
 
 
-
+        #returns socket connection object 
         def get_socket_obj(self, client_id):
             try:
                 for clients, socket_obj in self.socket_object_dict.items():
@@ -175,7 +176,7 @@ class Caesar:
             return self.recvall(sock, msglen)
 
 
-
+        
         def recvall(self, sock, n):
             # Helper function to recv n bytes or return None if EOF is hit
             data = bytearray()
