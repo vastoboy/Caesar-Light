@@ -1,12 +1,9 @@
 # Caesar Light Reverse Shell
 
-<img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" alt="Python"> <img src="https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white" alt="Elasticsearch"> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"><img src="https://img.shields.io/badge/VirtualBox-21416b?style=for-the-badge&logo=VirtualBox&logoColor=white" alt="Virtualbox"><img src="https://img.shields.io/badge/Sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="sqlite">
+<img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" alt="Python"> <img src="https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white" alt="Elasticsearch"> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"><img src="https://img.shields.io/badge/VirtualBox-21416b?style=for-the-badge&logo=VirtualBox&logoColor=white" alt="Virtualbox">
 
 
-
-Simple Python TCP Reverse Shell Prototype For Educational Purposes Only!!!
-
-This should be used as a guide into malware development. Python isn't great for malware development however, this should give you a great idea of how things work. This prototype does not cover antivirus evasion techniques.
+This project presents a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. It serves as a prototype and is strictly intended for educational purposes only. The application facilitates a basic but effective demonstration of how reverse shell connections can be established and controlled remotely. While Python may not be the ideal choice for advanced malware development due to its limitations in circumventing antivirus detection, this project provides a foundational understanding of how such malicious software operates.
 
 
 ## Setup Elasticsearch
@@ -25,7 +22,7 @@ This should be used as a guide into malware development. Python isn't great for 
 * Once Elasticsearch is set up and configured, you can start using Packet-Sniffer to capture and analyze network packets, with the captured data being stored in Elasticsearch for further analysis and visualization.
 
 
-## Features
+## Example
 
 ### Reverse Shell Diagram
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
@@ -45,7 +42,7 @@ Get a reverse shell and interact with the tartget's machine
 
 
 
-## Usage
+## Features
 
 ```
 
