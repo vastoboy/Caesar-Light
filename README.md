@@ -27,18 +27,18 @@ This should be used as a guide into malware development. Python isn't great for 
 
 ## Features
 
-#### Reverse Shell Diagram\
+### Reverse Shell Diagram
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
 
 
 
-#### Clients\
+### Clients
 Display previously connected clients and clients with an active connection to the server\
 ![Picture5](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/78420df0-11b1-4671-8dcb-87f66ae29ed4)
 
 
 
-#### Reverse Shell\
+### Reverse Shell
 Get a reverse shell and interact with the tartget's machine
 ![Picture6](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/1f4e3bd2-05fd-4fd0-a6d8-7f1d9160c147)
 
