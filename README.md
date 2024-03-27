@@ -9,23 +9,36 @@ Simple Python TCP Reverse Shell Prototype For Educational Purposes Only!!!
 This should be used as a guide into malware development. Python isn't great for malware development however, this should give you a great idea of how things work. This prototype does not cover antivirus evasion techniques.
 
 
+## Setup Elasticsearch
+* Before using Packet-Sniffer, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing captured packet data. Follow these steps to set up Elasticsearch:
 
+* Install Elasticsearch: Download and install Elasticsearch from the official Elasticsearch website.
+
+* Start Elasticsearch: Start the Elasticsearch service using the appropriate method for your operating system. Refer to the Elasticsearch documentation for detailed instructions on how to start the service.
+
+* Configure Elasticsearch: Optionally, configure Elasticsearch settings such as cluster name, node settings, network host, etc., as per your requirements. Refer to the Elasticsearch documentation for guidance on configuration options.
+
+* Verify Elasticsearch Setup: Confirm that Elasticsearch is running and accessible by visiting http://localhost:9200 in your web browser. You should see a JSON response indicating the Elasticsearch cluster status.
+
+* Create Elasticsearch Index: Create an index in Elasticsearch to store the captured packet data. You can use the Elasticsearch API or tools like Kibana to create the index with the desired settings and mappings.
+
+* Once Elasticsearch is set up and configured, you can start using Packet-Sniffer to capture and analyze network packets, with the captured data being stored in Elasticsearch for further analysis and visualization.
 
 
 ## Features
 
-Reverse Shell Diagram\
+#### Reverse Shell Diagram\
 ![Picture3](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/01fbe7d9-9871-4f1c-8c1c-71bd657fd40a)
 
 
 
-Clients\
+#### Clients\
 Display previously connected clients and clients with an active connection to the server\
 ![Picture5](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/78420df0-11b1-4671-8dcb-87f66ae29ed4)
 
 
 
-Reverse Shell\
+#### Reverse Shell\
 Get a reverse shell and interact with the tartget's machine
 ![Picture6](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/1f4e3bd2-05fd-4fd0-a6d8-7f1d9160c147)
 
