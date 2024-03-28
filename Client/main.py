@@ -6,6 +6,6 @@
 from caesar_client import CaesarClient
 
 
-caesar = CaesarClient("192.168.1.206", 5000)
+caesar = CaesarClient("IP-ADDRESS", "PORT")
 caesar.establish_connection()
 

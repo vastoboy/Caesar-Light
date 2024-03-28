@@ -3,7 +3,9 @@
 <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" alt="Python"> <img src="https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white" alt="Elasticsearch"> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"><img src="https://img.shields.io/badge/VirtualBox-21416b?style=for-the-badge&logo=VirtualBox&logoColor=white" alt="Virtualbox">
 
 
-This project presents a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. It serves as a prototype and is strictly intended for educational purposes only. The application facilitates a basic but effective demonstration of how reverse shell connections can be established and controlled remotely. While Python may not be the ideal choice for advanced malware development due to its limitations in circumventing antivirus detection, this project provides a foundational understanding of how such malicious software operates.
+This project presents Caesar-Light, a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. Caesar-Light is integrated with Elasticsearch to store target information, allowing for easy retrieval and analysis of data collected from connected targets. Additionally, images and audio files collected from connected clients will be stored in individual client folders named using their client ID.
+
+Caesar-Light serves as a prototype and is strictly intended for educational purposes only. The application facilitates a basic but effective demonstration of how reverse shell connections can be established and controlled remotely. While Python may not be the ideal choice for advanced malware development due to its limitations, this project provides a foundational understanding of how such malicious software operates.
 
 
 ## Setup Elasticsearch

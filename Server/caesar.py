@@ -78,34 +78,6 @@ class Caesar:
                     break
 
 
-
-        # handles connection thread
-        def thread_handler(self):
-            for _ in range(2):
-                thread = threading.Thread(target=self.work)
-                thread.deamon = True
-                thread.start()
-
-
-        def work(self):
-            thread_number = self.queue.get()
-            if thread_number == 1:
-                self.create_socket()
-                self.handle_connections()
-            if thread_number == 2:
-                self.shell_interface()
-            self.queue.task_done()
-
-
-
-        def job_handler(self):
-            job_number = [1, 2]
-            for x in job_number:
-                self.queue.put(x)
-            self.queue.join()
-
-
-
         # displays caesar shell commands
         def show_commands(self):
             user_guide = """
@@ -137,6 +109,7 @@ class Caesar:
             print(user_guide)
 
 
+
          # format text to bold and blue 
         def convert_caesar_text(self, text):
             RESET = "\033[0m"
@@ -157,35 +130,11 @@ class Caesar:
 
 
 
-
         # sends null to the client and get the current working directory in return
         def send_null(self, client_sock_object):
                 client_sock_object.send(str(" ").encode())
                 data = client_sock_object.recv(1024).decode()
                 print(str(data), end="")
-
-
-
-        def recv_msg(self, sock):
-            # Read message length and unpack it into an integer
-            raw_msglen = self.recvall(sock, 4)
-            if not raw_msglen:
-                return None
-            msglen = struct.unpack('>I', raw_msglen)[0]
-            # Read the message data
-            return self.recvall(sock, msglen)
-
-
-        
-        def recvall(self, sock, n):
-            # Helper function to recv n bytes or return None if EOF is hit
-            data = bytearray()
-            while len(data) < n:
-                packet = sock.recv(n - len(data))
-                if not packet:
-                    return None
-                data.extend(packet)
-            return data
 
 
 
@@ -206,6 +155,10 @@ class Caesar:
                         break
 
                     elif cmd == "":
+                        self.send_null(client_sock_object)
+
+                    elif cmd == "guide":
+                        self.show_commands()
                         self.send_null(client_sock_object)
 
                     elif "get" in cmd:
@@ -410,8 +363,16 @@ class Caesar:
                         print("[-]Invalid command!!!")
 
 
+        
+        def thread_handler(self):
+            for task_number in [1, 2]:
+                thread = threading.Thread(target=self.handle_connections if task_number == 1 else self.shell_interface)
+                if task_number == 1:
+                    thread.daemon = True
+                thread.start()
+
 
         def start(self):
+            self.create_socket()
             self.thread_handler()
-            self.job_handler()
 

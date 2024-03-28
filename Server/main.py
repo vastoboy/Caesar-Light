@@ -19,7 +19,7 @@ art = """
 print(art)
 
 client_folder_name = "ClientFolder"
-cr = Caesar("192.168.1.206", 5000, "caesar-index", "http://localhost:9200", client_folder_name)
+cr = Caesar("IP-ADDRESS", "PORT", "ES-INDEX", "http://localhost:9200", client_folder_name)
 
 if not os.path.exists(client_folder_name):
     os.mkdir(client_folder_name)

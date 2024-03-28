@@ -173,7 +173,6 @@ class EsHandler:
 
 
 
-
         # retrieves the specified feilds in a document
         def show_fields(self, client_id):
             try:
@@ -189,7 +188,6 @@ class EsHandler:
 
             except Exception as e:
                 print("[-]Document does not exist!!! /n")
-
 
 
 

