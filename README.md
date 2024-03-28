@@ -30,7 +30,7 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 ```
 curl -X PUT "http://localhost:9200/your_index_name"
 ```
-* Run the Caesar-Light server program on the Linux system.
+* Run the Caesar-Light server program on the Linux system with admin priviledges.
 
 ```
     sudo python3 main.py
