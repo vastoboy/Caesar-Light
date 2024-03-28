@@ -9,7 +9,7 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 
 
 ## Setup Elasticsearch
-* Before using Packet-Sniffer, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing captured packet data. Follow these steps to set up Elasticsearch:
+* Before using Caesar-Light, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing captured packet data. Follow these steps to set up Elasticsearch:
 
 * Install Elasticsearch: Download and install Elasticsearch from the official Elasticsearch website.
 
@@ -21,14 +21,15 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 
 * Create Elasticsearch Index: Create an index in Elasticsearch to store the captured packet data. You can use the Elasticsearch API or tools like Kibana to create the index with the desired settings and mappings.
 
-* Once Elasticsearch is set up and configured, you can start using Packet-Sniffer to capture and analyze network packets, with the captured data being stored in Elasticsearch for further analysis and visualization.
-
 
 ## Setup Caesar-Light
 
 ### Server Component
 * Install and configure Elasticsearch on a Linux system.
 * Create an index in Elasticsearch specifically for the server program to store target information.
+```
+curl -X PUT "http://localhost:9200/your_index_name"
+```
 * Run the Caesar-Light server program on the Linux system.
 
 ```
