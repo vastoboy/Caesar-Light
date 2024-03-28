@@ -5,8 +5,6 @@
 
 This project presents Caesar-Light, a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. Caesar-Light is integrated with Elasticsearch to store target information, allowing for easy retrieval and analysis of data collected from connected targets. Additionally, images and audio files collected from connected clients will be stored in individual client folders named using their client ID.
 
-Caesar-Light consists of a client-server program. The server component should be run on a Linux system, while the client component should be run on a Windows system. To set up the server component, Elasticsearch should be installed and configured on the Linux system. An index should be created in Elasticsearch specifically for the server program, allowing it to store target information retrieved from connected clients. Once Elasticsearch is set up and the index is created, the server program can be executed, allowing it to listen for incoming connections from client devices.
-
 Caesar-Light serves as a prototype and is strictly intended for educational purposes only. The application facilitates a basic but effective demonstration of how reverse shell connections can be established and controlled remotely. While Python may not be the ideal choice for advanced malware development due to its limitations, this project provides a foundational understanding of how such malicious software operates.
 
 
@@ -26,6 +24,22 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 * Once Elasticsearch is set up and configured, you can start using Packet-Sniffer to capture and analyze network packets, with the captured data being stored in Elasticsearch for further analysis and visualization.
 
 
+## Setup Caesar-Light
+
+### Server Component
+* Install and configure Elasticsearch on a Linux system.
+* Create an index in Elasticsearch specifically for the server program to store target information.
+* Run the Caesar-Light server program on the Linux system.
+
+```
+    sudo python3 main.py
+```
+
+### Client Component
+
+* Run the Caesar-Light client program on Windows systems.
+* Connect to the Caesar-Light server to initiate a reverse shell connection and provide remote access to the target system.
+
 ## Example
 
 ### Reverse Shell Diagram
@@ -42,7 +56,6 @@ Display previously connected clients and clients with an active connection to th
 ### Reverse Shell
 Get a reverse shell and interact with the tartget's machine
 ![Picture6](https://github.com/8itwise/Caesar-Reverse-Shell/assets/18365258/1f4e3bd2-05fd-4fd0-a6d8-7f1d9160c147)
-
 
 
 
