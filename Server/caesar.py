@@ -110,7 +110,7 @@ class Caesar:
 
 
 
-         # format text to bold and blue 
+        # format text to bold and blue 
         def convert_caesar_text(self, text):
             RESET = "\033[0m"
             BOLD = "\033[1m"
@@ -118,7 +118,7 @@ class Caesar:
             return f"{BOLD}{COLOR}{text}{RESET}"
 
 
-        #returns socket connection object 
+        # returns socket connection object 
         def get_socket_obj(self, client_id):
             try:
                 for clients, socket_obj in self.socket_object_dict.items():
