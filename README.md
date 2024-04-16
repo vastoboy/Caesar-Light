@@ -1,15 +1,15 @@
-# Caesar Light Reverse Shell
+# Caesar-Light Reverse Shell
 
 <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" alt="Python"> <img src="https://img.shields.io/badge/Elastic_Search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white" alt="Elasticsearch"> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows"><img src="https://img.shields.io/badge/VirtualBox-21416b?style=for-the-badge&logo=VirtualBox&logoColor=white" alt="Virtualbox">
 
 
-This project presents Caesar-Light, a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. Caesar-Light is integrated with Elasticsearch to store target information, allowing for easy retrieval and analysis of data collected from connected targets. Additionally, images and audio files collected from connected clients will be stored in individual client folders named using their client ID.
+Caesar-Light is a simple Python TCP reverse shell designed to manage multiple client connections simultaneously. Caesar-Light is integrated with Elasticsearch to store target information, allowing for easy retrieval and analysis of data collected from connected targets. Additionally, images and audio files collected from connected clients will be stored in individual client folders named using their client ID.
 
 Caesar-Light serves as a prototype and is strictly intended for educational purposes only. The application facilitates a basic but effective demonstration of how reverse shell connections can be established and controlled remotely. While Python may not be the ideal choice for advanced malware development due to its limitations, this project provides a foundational understanding of how such malicious software operates.
 
 
 ## Setup Elasticsearch
-* Before using Caesar-Light, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing captured packet data. Follow these steps to set up Elasticsearch:
+* Before using Caesar-Light, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing target's system info. Follow these steps to set up Elasticsearch:
 
 * Install Elasticsearch: Download and install Elasticsearch from the official Elasticsearch website.
 
@@ -19,7 +19,7 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 
 * Verify Elasticsearch Setup: Confirm that Elasticsearch is running and accessible by visiting http://localhost:9200 in your web browser. You should see a JSON response indicating the Elasticsearch cluster status.
 
-* Create Elasticsearch Index: Create an index in Elasticsearch to store the captured packet data. You can use the Elasticsearch API or tools like Kibana to create the index with the desired settings and mappings.
+* Create Elasticsearch Index: Create an index in Elasticsearch to store the target's info. You can use the Elasticsearch API or tools like Kibana to create the index with the desired settings and mappings.
 
 
 ## Setup Caesar-Light

