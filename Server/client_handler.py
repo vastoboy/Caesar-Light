@@ -90,7 +90,7 @@ class ClientHandler:
                 path = os.path.join(client_folder, client_id, image_name + ".jpg")
 
                 with open(path, 'wb') as file:
-                    fileSize = int(client_sock_object.recv(1024).decode())# accept and decode image file size
+                    fileSize = int(client_sock_object.recv(1024).decode()) # accept and decode image file size
                     time.sleep(1)
                     data = client_sock_object.recv(1024) # accept and decode length of data received
                     totalFileRecv = len(data)
@@ -169,7 +169,6 @@ class ClientHandler:
 
                 while True:
                     while len(data) < payload_size:
-                        # print("Recv: {}".format(len(data)))
                         data += conn.recv(60000)
                         if exitSignal == "exit":
                             conn.send(exitSignal.encode())
