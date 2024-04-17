@@ -9,7 +9,7 @@ Caesar-Light serves as a prototype and is strictly intended for educational purp
 
 
 ## Setup Elasticsearch
-* Before using Caesar-Light, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing target's system info. Follow these steps to set up Elasticsearch:
+Before using Caesar-Light, ensure that you have Elasticsearch installed and configured. Elasticsearch is used for storing and indexing target's system info. Follow these steps to set up Elasticsearch:
 
 * Install Elasticsearch: Download and install Elasticsearch from the official Elasticsearch website.
 
